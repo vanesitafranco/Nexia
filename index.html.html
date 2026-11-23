@@ -1,0 +1,578 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>NEXIA</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: plataforma multipágina. Navbar fija con desenfoque, hero con malla pastel y tarjetas flotantes, páginas de perfil, chat, intercambios y panel. */
+:root{
+  --bg:#fbf8fc; --surface:#ffffff; --surface2:#f5effa; --fg:#2b2540; --muted:#6f6788; --line:#ebe2f2;
+  --ink:#2b2540; --accent:#6a4fc0; --accent-2:#8f77e0; --accent-fg:#ffffff;
+  --blush:#f9d5e5; --lav:#dacff7; --sage:#cdeadb; --sky:#cfe5f8; --butter:#fbeec6; --peach:#fcdcc9;
+  --glow1:rgba(249,213,229,.9); --glow2:rgba(218,207,247,.9); --glow3:rgba(207,229,248,.9); --glow4:rgba(205,234,219,.8);
+  --nav:rgba(251,248,252,.78); --shadow:0 18px 48px rgba(106,79,192,.13); --shadow-s:0 6px 18px rgba(106,79,192,.10);
+  --f-d:'Sora','Trebuchet MS',sans-serif; --f-b:'Manrope',system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#17132a; --surface:#241e3d; --surface2:#2e2750; --fg:#f2eeff; --muted:#b4abd3; --line:#3a3260;
+  --accent:#b8a0ff; --accent-2:#9b82f0; --accent-fg:#17132a;
+  --glow1:rgba(160,80,130,.45); --glow2:rgba(110,90,200,.5); --glow3:rgba(70,120,190,.4); --glow4:rgba(70,150,120,.35);
+  --nav:rgba(23,19,42,.78); --shadow:0 18px 48px rgba(0,0,0,.4); --shadow-s:0 6px 18px rgba(0,0,0,.3); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#17132a; --surface:#241e3d; --surface2:#2e2750; --fg:#f2eeff; --muted:#b4abd3; --line:#3a3260;
+  --accent:#b8a0ff; --accent-2:#9b82f0; --accent-fg:#17132a;
+  --glow1:rgba(160,80,130,.45); --glow2:rgba(110,90,200,.5); --glow3:rgba(70,120,190,.4); --glow4:rgba(70,150,120,.35);
+  --nav:rgba(23,19,42,.78); --shadow:0 18px 48px rgba(0,0,0,.4); --shadow-s:0 6px 18px rgba(0,0,0,.3); color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font:16px/1.55 var(--f-b);padding-block:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1160px;margin:0 auto}
+h1,h2,h3,h4{font-family:var(--f-d);margin:0;text-wrap:balance;line-height:1.12;letter-spacing:-.01em}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+a{color:inherit}
+
+/* navbar */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--nav);backdrop-filter:blur(14px)}
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:25;margin:0 calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:12px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));background:var(--nav);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--f-d);font-weight:800;font-size:1.35rem;letter-spacing:.06em;cursor:pointer;border:0;background:none;padding:0}
+.links{display:flex;gap:2px;margin-left:auto;flex-wrap:wrap}
+.links button{border:0;background:none;padding:8px 14px;border-radius:999px;cursor:pointer;font-weight:600;color:var(--muted);position:relative}
+.links button:hover{color:var(--fg)}
+.links button[aria-current="page"]{background:var(--surface2);color:var(--fg)}
+.dot{background:#f06d9a;color:#fff;border-radius:999px;font-size:.7rem;padding:1px 7px;margin-left:6px;font-weight:700}
+
+/* botones */
+.btn{border:0;border-radius:14px;padding:12px 22px;font-weight:700;cursor:pointer;background:var(--accent);color:var(--accent-fg);transition:transform .15s,box-shadow .15s;box-shadow:0 8px 20px rgba(106,79,192,.28)}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:var(--surface);color:var(--fg);box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn.sm{padding:8px 16px;font-size:.9rem;border-radius:12px}
+.btn[disabled]{opacity:.55;cursor:default;transform:none}
+
+/* hero */
+.hero{position:relative;margin-top:22px;border-radius:36px;overflow:hidden;padding:64px 48px;background:
+  radial-gradient(60% 80% at 8% 10%,var(--glow1),transparent 70%),radial-gradient(50% 70% at 90% 5%,var(--glow2),transparent 70%),
+  radial-gradient(60% 80% at 80% 100%,var(--glow3),transparent 70%),radial-gradient(45% 60% at 10% 100%,var(--glow4),transparent 70%),var(--surface);
+  display:grid;grid-template-columns:1.05fr .95fr;gap:32px;align-items:center;box-shadow:var(--shadow-s)}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;background:var(--surface);padding:6px 14px;border-radius:999px;font-weight:700;font-size:.82rem;box-shadow:var(--shadow-s)}
+.eyebrow i{width:8px;height:8px;border-radius:50%;background:#4cc38a;display:block}
+.hero h1{font-size:clamp(2.3rem,5.4vw,4rem);font-weight:800;margin:18px 0 16px}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,#8f77e0,#f06d9a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .lead{font-size:1.15rem;color:var(--muted);max-width:48ch}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.hero .row{margin-top:26px}
+.proof{display:flex;align-items:center;gap:14px;margin-top:30px;flex-wrap:wrap}
+.stack{display:flex}
+.stack svg{width:40px;height:40px;border-radius:50%;border:3px solid var(--surface);margin-left:-10px}
+.stack svg:first-child{margin-left:0}
+.stage{position:relative;height:420px}
+.fcard{position:absolute;background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:blur(10px);border-radius:22px;padding:14px 16px;box-shadow:var(--shadow);display:flex;gap:12px;align-items:center;border:1px solid var(--line);animation:float 7s ease-in-out infinite}
+.fcard svg.av{width:52px;height:52px;border-radius:50%;flex:none}
+.fcard b{font-family:var(--f-d);display:block;font-size:.98rem}
+.fcard small{color:var(--muted)}
+.fcard.a{top:6%;left:2%;animation-delay:0s}.fcard.b{top:36%;right:0;animation-delay:-2.3s}.fcard.c{bottom:4%;left:10%;animation-delay:-4.6s}
+.swap{position:absolute;left:50%;top:50%;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;background:linear-gradient(135deg,#8f77e0,#f06d9a);display:grid;place-items:center;box-shadow:0 14px 34px rgba(143,119,224,.5)}
+.swap svg{width:38px;height:38px}
+@keyframes float{50%{transform:translateY(-12px)}}
+
+/* secciones */
+.sec{margin-top:84px}
+.sec-h{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:26px}
+.sec-h h2{font-size:clamp(1.6rem,3vw,2.3rem);max-width:22ch}
+.sec-h p{color:var(--muted);max-width:44ch}
+.cats{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
+.cat{border:0;text-align:left;cursor:pointer;border-radius:24px;padding:20px;background:var(--c);color:var(--ink);display:flex;flex-direction:column;gap:30px;transition:transform .2s;min-width:0}
+.cat:hover{transform:translateY(-5px) rotate(-1deg)}
+.cat .ic{width:46px;height:46px;border-radius:15px;background:rgba(255,255,255,.7);display:grid;place-items:center}
+.cat .ic svg{width:24px;height:24px}
+.cat b{font-family:var(--f-d)}.cat small{opacity:.75;display:block}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;counter-reset:s}
+.step{background:var(--surface);border-radius:26px;padding:26px;box-shadow:var(--shadow-s);position:relative;display:flex;flex-direction:column;gap:10px}
+.step::before{counter-increment:s;content:counter(s);width:40px;height:40px;border-radius:14px;display:grid;place-items:center;font-family:var(--f-d);font-weight:700;background:var(--c);color:var(--ink)}
+.step h3{font-size:1.15rem}.step p{color:var(--muted)}
+.band{border-radius:36px;padding:48px;background:linear-gradient(120deg,#cfc2f5,#f9d5e5 60%,#fcdcc9);color:var(--ink);display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center}
+.band h2{font-size:clamp(1.6rem,3vw,2.4rem);margin-bottom:12px}
+.band p{max-width:52ch;opacity:.85}
+.clock{display:flex;gap:12px;justify-content:center;align-items:center}
+.clock .pill{background:rgba(255,255,255,.75);border-radius:22px;padding:16px 20px;text-align:center;font-family:var(--f-d)}
+.clock .pill b{font-size:1.9rem;display:block}.clock .pill small{font-family:var(--f-b);opacity:.7}
+.clock svg{width:34px}
+.testi{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.quote{background:var(--surface);border-radius:26px;padding:24px;box-shadow:var(--shadow-s);display:flex;flex-direction:column;gap:14px}
+.quote p{font-size:1.02rem}
+.who{display:flex;gap:10px;align-items:center}.who svg{width:42px;height:42px;border-radius:50%}.who small{color:var(--muted);display:block}
+
+/* tarjetas de personas */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+.pcard{background:var(--surface);border-radius:28px;box-shadow:var(--shadow-s);overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:transform .2s,box-shadow .2s;position:relative;min-width:0;text-align:left;border:0;padding:0;color:inherit}
+.pcard:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+.pcard .top{height:86px;background:var(--c)}
+.pcard .body{padding:0 20px 20px;display:flex;flex-direction:column;gap:12px;margin-top:-34px}
+.pcard svg.av{width:68px;height:68px;border-radius:50%;border:4px solid var(--surface);background:var(--surface)}
+.pcard h3{font-size:1.15rem}
+.muted{color:var(--muted)}
+.tag{display:inline-flex;gap:6px;align-items:center;background:var(--c);color:var(--ink);font-weight:700;font-size:.8rem;padding:5px 12px;border-radius:999px}
+.pcard .t{font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:5px}
+.pcard .d{font-size:.92rem;overflow-wrap:anywhere;margin-top:4px}
+.badge{position:absolute;top:14px;right:14px;background:#fff;color:#7a3fb0;font-weight:800;font-size:.72rem;padding:4px 12px;border-radius:999px;box-shadow:var(--shadow-s)}
+.stars{color:#f0a93a;letter-spacing:1px}
+.meta{display:flex;gap:12px;flex-wrap:wrap;font-size:.85rem;color:var(--muted);align-items:center}
+
+/* explorar */
+.layout{display:grid;grid-template-columns:260px 1fr;gap:28px;margin-top:28px;align-items:start}
+.filters{position:sticky;top:90px;background:var(--surface);border-radius:26px;padding:22px;box-shadow:var(--shadow-s);display:flex;flex-direction:column;gap:16px}
+.filters label,.fld{display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:.85rem}
+input,select,textarea{background:var(--bg);border:1.5px solid var(--line);border-radius:14px;padding:11px 14px;width:100%;min-width:0}
+.fchips{display:flex;flex-wrap:wrap;gap:6px}
+.fchip{border:1.5px solid var(--line);background:none;border-radius:999px;padding:5px 12px;font-size:.82rem;font-weight:600;cursor:pointer}
+.fchip[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.page-h{padding-top:36px}.page-h h1{font-size:clamp(1.9rem,4vw,2.9rem)}.page-h p{color:var(--muted);margin-top:8px;max-width:60ch}
+.empty{background:var(--surface);border-radius:26px;padding:40px;text-align:center;color:var(--muted);grid-column:1/-1}
+
+/* perfil */
+.banner{height:190px;border-radius:32px;position:relative;overflow:hidden;background:var(--c);margin-top:24px}
+.banner svg{position:absolute;inset:0;width:100%;height:100%}
+.ph{display:flex;gap:22px;align-items:flex-end;margin:-62px 28px 0;position:relative;flex-wrap:wrap}
+.ph svg.av{width:130px;height:130px;border-radius:50%;border:6px solid var(--bg);flex:none}
+.ph h1{font-size:2rem}.ph .row{margin-left:auto}
+.cols{display:grid;grid-template-columns:1fr 340px;gap:24px;margin-top:28px;align-items:start}
+.box{background:var(--surface);border-radius:26px;padding:26px;box-shadow:var(--shadow-s);display:flex;flex-direction:column;gap:14px;min-width:0}
+.box h3{font-size:1.15rem}
+.skill{border-radius:20px;padding:18px;background:var(--c);color:var(--ink)}
+.skill small{font-weight:800;letter-spacing:.08em;text-transform:uppercase;opacity:.7;font-size:.7rem}
+.skill p{font-weight:700;font-family:var(--f-d);margin-top:4px;overflow-wrap:anywhere}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:.92rem}
+.kv:last-child{border:0}
+.rev{padding:14px 0;border-bottom:1px solid var(--line)}.rev:last-child{border:0}
+.note{background:var(--surface2);border-radius:16px;padding:12px 16px;font-size:.9rem}
+.back{border:0;background:none;color:var(--muted);font-weight:700;cursor:pointer;padding:24px 0 0}
+
+/* chat */
+.chat{display:grid;grid-template-columns:320px 1fr;margin-top:26px;background:var(--surface);border-radius:30px;box-shadow:var(--shadow);overflow:hidden;height:min(640px,calc(100vh - 190px));min-height:460px}
+.convs{border-right:1px solid var(--line);overflow:auto}
+.conv{display:flex;gap:12px;padding:14px 18px;cursor:pointer;border:0;background:none;width:100%;text-align:left;align-items:center}
+.conv.on,.conv:hover{background:var(--surface2)}
+.conv svg{width:46px;height:46px;border-radius:50%;flex:none}
+.conv div{min-width:0;flex:1}.conv b{display:block}.conv small{color:var(--muted);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.thread{display:flex;flex-direction:column;min-width:0;min-height:0}
+.thead{padding:14px 20px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:center}
+.thead svg{width:42px;height:42px;border-radius:50%}
+.msgs{flex:1;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:10px;background:linear-gradient(180deg,var(--surface2),var(--surface))}
+.m{max-width:75%;padding:10px 15px;border-radius:20px;overflow-wrap:anywhere}
+.m.them{background:var(--surface);box-shadow:var(--shadow-s);border-bottom-left-radius:6px}
+.m.me{align-self:flex-end;background:linear-gradient(135deg,#8f77e0,#b08cf0);color:#fff;border-bottom-right-radius:6px}
+.typing{color:var(--muted);font-size:.85rem;padding-left:6px}
+.composer{display:flex;gap:10px;padding:14px;border-top:1px solid var(--line)}
+.composer input{flex:1}
+
+/* intercambios */
+.list{display:flex;flex-direction:column;gap:16px;margin-top:26px}
+.xc{background:var(--surface);border-radius:28px;padding:24px;box-shadow:var(--shadow-s);display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center}
+.xc svg.av{width:58px;height:58px;border-radius:50%}
+.tl{display:flex;gap:0;margin-top:12px;flex-wrap:wrap}
+.tl span{font-size:.75rem;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:6px;margin-right:16px}
+.tl span::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--line)}
+.tl span.on{color:var(--fg)}.tl span.on::before{background:#4cc38a}
+.xc .acts{display:flex;flex-direction:column;gap:8px;align-items:stretch}
+
+/* panel */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:26px}
+.kpi{border-radius:26px;padding:22px;background:var(--c);color:var(--ink)}
+.kpi b{font-family:var(--f-d);font-size:2.2rem;display:block;line-height:1}.kpi small{font-weight:700;opacity:.75}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:22px}
+.ring{display:flex;gap:20px;align-items:center}
+.ring svg{width:130px;height:130px;flex:none}
+.mini{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer;background:none;border-left:0;border-right:0;border-top:0;width:100%;text-align:left}
+.mini:last-child{border-bottom:0}
+.mini svg{width:44px;height:44px;border-radius:50%;flex:none}.mini div{min-width:0;flex:1}.mini small{color:var(--muted);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* publicar */
+.pub{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;margin-top:26px;align-items:start}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form .full{grid-column:1/-1}
+.err{color:#c2415f;font-size:.82rem;min-height:1em}
+:root[data-theme="dark"] .err{color:#ff9db8}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .err{color:#ff9db8}}
+.sticky{position:sticky;top:90px}
+
+/* modal */
+dialog{border:0;border-radius:30px;padding:28px;background:var(--surface);color:var(--fg);max-width:480px;width:calc(100% - 32px);box-shadow:0 30px 80px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(43,37,64,.5);backdrop-filter:blur(4px)}
+dialog h3{font-size:1.4rem;margin-bottom:6px}
+dialog .fld{margin-top:14px}
+.acts-r{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+.rate{display:flex;gap:6px;font-size:2rem}
+.rate button{border:0;background:none;cursor:pointer;color:var(--line);font-size:2rem;padding:0}
+.rate button.on{color:#f0a93a}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);background:var(--fg);color:var(--bg);padding:13px 24px;border-radius:16px;font-weight:700;opacity:0;pointer-events:none;transition:.3s;z-index:60;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+footer{margin-top:90px;padding:40px 0 50px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:.9rem}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr;padding:40px 26px}.stage{height:360px}
+  .band{grid-template-columns:1fr;padding:30px}
+  .layout,.cols,.pub,.two{grid-template-columns:1fr}.filters,.sticky{position:static}
+  .chat{grid-template-columns:1fr;height:auto}.convs{border-right:0;border-bottom:1px solid var(--line);max-height:230px}.thread{height:520px}
+  .xc{grid-template-columns:auto 1fr}.xc .acts{grid-column:1/-1;flex-direction:row}
+  .ph{margin:-50px 8px 0}.ph .row{margin-left:0}
+}
+@media (max-width:520px){.form{grid-template-columns:1fr}.links button{padding:7px 10px;font-size:.9rem}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+
+<div class="nav"><div class="wrap">
+  <button class="logo" data-go="inicio" aria-label="NEXIA inicio">
+    <svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><circle cx="15" cy="20" r="11" fill="#f9d5e5"/><circle cx="25" cy="20" r="11" fill="#cfe5f8" fill-opacity=".9"/><path d="M20 11.5a11 11 0 0 1 0 17a11 11 0 0 1 0-17z" fill="#b8a0ff"/></svg>NEXIA</button>
+  <nav class="links" id="links" aria-label="Principal"></nav>
+  <button class="btn sm" data-go="publicar">Publicar habilidad</button>
+</div></div>
+<main class="wrap" id="app"></main>
+<div class="wrap"><footer><span>NEXIA · Intercambia lo que sabes · Prototipo del Grupo 3</span><span>Datos de prueba guardados en tu navegador</span></footer></div>
+<dialog id="dlg"></dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ---------- datos ---------- */
+const ICON={
+ idiomas:'<path d="M4 5h16v11H10l-5 4v-4H4z"/>',
+ diseno:'<circle cx="9" cy="9" r="5"/><rect x="11" y="11" width="9" height="9" rx="2"/>',
+ musica:'<path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/>',
+ cocina:'<path d="M5 10h14v8a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2z"/><path d="M3 10h18M9 5c0 2 2 2 2 4M14 5c0 2 2 2 2 4"/>',
+ programacion:'<path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13.5 6l-3 12"/>',
+ deporte:'<path d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12"/>',
+ arte:'<path d="M4 20c4 0 5-2 5-4l8-9-3-3-9 8c-2 0-4 1-4 5z"/><path d="M14 7l3 3"/>',
+ mates:'<path d="M4 12h16"/><circle cx="12" cy="6" r="1.4"/><circle cx="12" cy="18" r="1.4"/>',
+ foto:'<rect x="3" y="7" width="18" height="12" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M8 7l1.5-2h5L16 7"/>',
+ negocios:'<rect x="3" y="8" width="18" height="11" rx="2"/><path d="M9 8V6h6v2M3 13h18"/>',
+ escritura:'<path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/>'
+};
+const CATS=[
+ {id:'idiomas',n:'Idiomas',c:'var(--sky)'},{id:'diseno',n:'Diseño',c:'var(--blush)'},{id:'musica',n:'Música',c:'var(--lav)'},
+ {id:'cocina',n:'Cocina',c:'var(--peach)'},{id:'programacion',n:'Programación',c:'var(--sage)'},{id:'deporte',n:'Deporte y bienestar',c:'var(--butter)'},
+ {id:'arte',n:'Arte',c:'var(--blush)'},{id:'mates',n:'Matemáticas',c:'var(--sky)'},{id:'foto',n:'Fotografía',c:'var(--sage)'},
+ {id:'negocios',n:'Negocios y finanzas',c:'var(--butter)'},{id:'escritura',n:'Escritura',c:'var(--lav)'}
+];
+const cat=id=>CATS.find(c=>c.id===id)||CATS[0];
+const icon=(id,sz=24)=>`<svg viewBox="0 0 24 24" width="${sz}" height="${sz}" fill="none" stroke="#2b2540" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[id]||''}</svg>`;
+const REVS=[
+ ['Paola M.','Muy clara explicando y puntual. Salí de la primera sesión con un plan concreto.',5],
+ ['Ricardo T.','Excelente actitud para enseñar. Se nota que le gusta compartir lo que sabe.',5],
+ ['Lina G.','Intercambio justo y bien organizado, repetiría sin dudarlo.',5],
+ ['Esteban R.','Paciente y con ejemplos reales. Mi mejor intercambio hasta ahora.',4],
+ ['Marcela V.','Llegó con material preparado, eso marca la diferencia.',5],
+ ['Óscar P.','Me ayudó a perder el miedo a empezar. Totalmente recomendado.',5]
+];
+const mk=(id,name,role,city,offer,offerD,want,wantD,bio,rating,done,mod,avail,av,r1,r2)=>({id,name,role,city,offer,offerD,want,wantD,bio,rating,done,mod,avail,av,rev:[REVS[r1],REVS[r2]]});
+const SEED=[
+ mk('s1','Camila Rojas','Diseñadora UX','Bogotá','diseno','Identidad de marca y logos con Figma','idiomas','Inglés conversacional para trabajo remoto','Diseño productos digitales hace 8 años. Me gusta explicar con proyectos reales y feedback directo.',4.9,14,'Virtual','Martes y jueves, tarde',0,0,2),
+ mk('s2','Julián Herrera','Profesor de inglés certificado','Medellín','idiomas','Inglés B2 a C1: entrevistas y reuniones','diseno','Presentaciones claras y atractivas','Doy clases hace 10 años y preparo a profesionales para entrevistas internacionales.',4.8,21,'Virtual','Lunes a miércoles, noche',1,1,3),
+ mk('s3','Valeria Núñez','Productora musical','Cali','musica','Guitarra acústica desde cero','programacion','Crear mi portafolio web','Toco desde los 12 años. Enseño canciones reales desde la primera clase.',4.7,9,'Virtual o presencial','Fines de semana, mañana',2,4,5),
+ mk('s4','Sebastián Ortiz','Ingeniero de software','Bogotá','programacion','HTML, CSS y JavaScript para empezar','cocina','Panadería artesanal con masa madre','Trabajo en desarrollo web y me encanta mostrar cómo se construye una página paso a paso.',4.9,17,'Virtual','Sábados, todo el día',3,0,4),
+ mk('s5','Daniela Peña','Chef pastelera','Barranquilla','cocina','Panadería y repostería profesional','musica','Guitarra para acompañar canciones','Tengo mi propio taller de pastelería. Enseño técnica y también cómo vender.',4.8,12,'Presencial','Miércoles y viernes, mañana',4,2,1),
+ mk('s6','Mateo Salazar','Ingeniero industrial','Bucaramanga','mates','Estadística y cálculo para la universidad','foto','Fotografía de producto','Hago tutorías hace 6 años. Explico con problemas resueltos y sin afán.',4.6,8,'Virtual','Lunes y jueves, noche',5,3,5),
+ mk('s7','Laura Mejía','Fotógrafa de producto','Pereira','foto','Fotografía y edición con el celular','mates','Estadística básica para mi negocio','Fotografío marcas locales. Enseño luz, composición y edición rápida.',4.9,19,'Virtual o presencial','Martes y sábados',6,1,4),
+ mk('s8','Andrés Castaño','Entrenador personal','Cartagena','deporte','Calistenia y movilidad para oficinistas','arte','Ilustración digital en Procreate','Entreno a personas que pasan el día sentadas. Rutinas cortas y que sí se cumplen.',4.7,11,'Virtual','Todos los días, 6:00 a. m.',7,3,0),
+ mk('s9','Natalia Vargas','Contadora pública','Medellín','negocios','Finanzas para emprendedores y personas','escritura','Escribir contenido para redes sociales','Acompaño a emprendedores a ordenar sus cuentas sin tecnicismos.',4.9,16,'Virtual','Jueves, tarde',8,2,0),
+ mk('s10','Camilo Duarte','Periodista','Bogotá','escritura','Redacción y storytelling','negocios','Llevar la contabilidad de mi emprendimiento','Escribo hace 12 años en medios nacionales. Enseño a contar mejor lo que haces.',4.8,13,'Virtual','Martes, noche',9,1,3),
+ mk('s11','Isabela Arango','Ilustradora','Manizales','arte','Ilustración digital y acuarela','deporte','Rutina de fuerza en casa','Ilustro para editoriales infantiles. Mis clases son tranquilas y muy prácticas.',4.8,10,'Virtual','Domingos, tarde',10,5,4)
+];
+const SKIN=['#ffe3cf','#f6cfa9','#e0b088','#c68e63','#ffdcc8','#d9a579','#f3c9a5','#b57b55'];
+const HAIR=['#3b2a2a','#1f1b2d','#7a4b3a','#c9886a','#2d2438','#8a5a44','#4a3430','#e0b25c'];
+const BGS=['#f9d5e5','#cfe5f8','#dacff7','#cdeadb','#fcdcc9','#fbeec6'];
+const SHIRT=['#6a4fc0','#ff9ebf','#4fb08e','#6aa8e4','#f2a56b','#a78ae8'];
+function avatar(i,cls=''){
+  i=Math.abs(i|0);const s=SKIN[i%8],h=HAIR[(i*3)%8],b=BGS[i%6],t=SHIRT[(i*5)%6],long=i%2===0;
+  return `<svg class="${cls}" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="${b}"/>${long?`<rect x="15" y="22" width="34" height="30" rx="14" fill="${h}"/>`:''}<path d="M10 66a22 20 0 0 1 44 0z" fill="${t}"/><rect x="28" y="38" width="8" height="9" fill="${s}"/><circle cx="32" cy="30" r="13" fill="${s}"/><path d="M19 29a13 13 0 0 1 26 0c-5-6-8-8-13-8s-8 2-13 8z" fill="${h}"/><circle cx="27.5" cy="31" r="1.7" fill="#2b2540"/><circle cx="36.5" cy="31" r="1.7" fill="#2b2540"/><path d="M28 36q4 3.4 8 0" stroke="#2b2540" stroke-width="1.6" fill="none" stroke-linecap="round"/><circle cx="24" cy="35" r="2.2" fill="#ff9ebf" fill-opacity=".5"/><circle cx="40" cy="35" r="2.2" fill="#ff9ebf" fill-opacity=".5"/></svg>`;
+}
+const stars=n=>'★★★★★'.slice(0,Math.round(n))+'☆☆☆☆☆'.slice(0,5-Math.round(n));
+
+/* ---------- estado ---------- */
+const KEY='nexia.v2';
+let S;
+function fresh(){return {users:JSON.parse(JSON.stringify(SEED)),me:null,reqs:[],chats:{},done:{taught:0,learned:0,count:0}}}
+function load(){try{const r=localStorage.getItem(KEY);if(r){S=JSON.parse(r);return}}catch(e){}S=fresh()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const byId=id=>S.users.find(u=>u.id===id);
+const score=u=>!S.me?0:(u.offer===S.me.want?1:0)+(u.want===S.me.offer?1:0);
+const unread=()=>Object.values(S.chats).reduce((a,c)=>a+(c.unread||0),0);
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2800)}
+function modal(h){$('dlg').innerHTML=h;if(!$('dlg').open)$('dlg').showModal()}
+
+/* ---------- componentes ---------- */
+function pcard(u){
+  const sc=u.mine?0:score(u);
+  return `<button class="pcard" data-go="perfil-${u.id}" aria-label="Ver perfil de ${esc(u.name)}">
+    <div class="top" style="--c:${cat(u.offer).c}"></div>
+    ${sc===2?'<span class="badge">Match perfecto</span>':sc===1?'<span class="badge">Posible match</span>':''}
+    <div class="body">${avatar(u.av,'av')}
+      <div><h3>${esc(u.name)}</h3><div class="muted" style="font-size:.9rem">${esc(u.role)} · ${esc(u.city)}</div></div>
+      <div><div class="t">Enseña</div><span class="tag" style="--c:${cat(u.offer).c}">${icon(u.offer,16)}${cat(u.offer).n}</span><div class="d">${esc(u.offerD)}</div></div>
+      <div><div class="t">Quiere aprender</div><span class="tag" style="--c:${cat(u.want).c}">${icon(u.want,16)}${cat(u.want).n}</span><div class="d">${esc(u.wantD)}</div></div>
+      <div class="meta"><span class="stars">${stars(u.rating)}</span><span>${u.rating.toFixed(1)}</span><span>· ${u.done} intercambios</span></div>
+    </div></button>`;
+}
+
+/* ---------- vistas ---------- */
+function vInicio(){
+  const top=[...S.users].sort((a,b)=>b.rating-a.rating||b.done-a.done).slice(0,4);
+  const hrs=S.users.reduce((a,u)=>a+u.done,0)*2;
+  return `
+  <section class="hero">
+    <div>
+      <span class="eyebrow"><i></i>${S.users.length} profesionales intercambiando ahora</span>
+      <h1>Lo que sabes <em>vale</em> más que el dinero</h1>
+      <p class="lead">NEXIA conecta personas que quieren enseñar una habilidad y aprender otra. Sin pagos, con horas de tiempo como única moneda.</p>
+      <div class="row"><button class="btn" data-go="publicar">Publicar mi habilidad</button><button class="btn ghost" data-go="explorar">Explorar personas</button></div>
+      <div class="proof"><div class="stack">${[0,3,6,9].map(i=>avatar(i)).join('')}</div><span class="muted"><b style="color:var(--fg)">${hrs} horas</b> de conocimiento ya compartidas</span></div>
+    </div>
+    <div class="stage" aria-hidden="true">
+      <div class="fcard a">${avatar(0,'av')}<div><b>Camila · Diseño</b><small>busca Inglés</small></div></div>
+      <div class="fcard b">${avatar(1,'av')}<div><b>Julián · Inglés</b><small>busca Diseño</small></div></div>
+      <div class="swap"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h14l-3-3M20 16H6l3 3"/></svg></div>
+      <div class="fcard c">${avatar(3,'av')}<div><b>Match perfecto</b><small>2 horas por 2 horas</small></div></div>
+    </div>
+  </section>
+
+  <section class="sec"><div class="sec-h"><h2>Encuentra la habilidad que quieres aprender</h2><p>Elige una categoría y mira quién la enseña.</p></div>
+    <div class="cats">${CATS.map(c=>`<button class="cat" style="--c:${c.c}" data-cat="${c.id}"><span class="ic">${icon(c.id)}</span><span><b>${c.n}</b><small>${S.users.filter(u=>u.offer===c.id).length} personas enseñan</small></span></button>`).join('')}</div></section>
+
+  <section class="sec"><div class="sec-h"><h2>Así funciona un intercambio</h2><p>Cuatro pasos desde que publicas hasta que aprendes algo nuevo.</p></div>
+    <div class="steps">
+      <div class="step" style="--c:var(--blush)"><h3>Crea tu perfil</h3><p>Cuenta qué sabes enseñar y qué quieres aprender.</p></div>
+      <div class="step" style="--c:var(--sky)"><h3>Encuentra tu match</h3><p>NEXIA destaca a quien enseña lo que buscas y quiere lo que ofreces.</p></div>
+      <div class="step" style="--c:var(--sage)"><h3>Conversen y agenden</h3><p>Chatea, acuerden horas y fijen la fecha de la sesión.</p></div>
+      <div class="step" style="--c:var(--butter)"><h3>Aprendan y califiquen</h3><p>Al terminar, ambos suman horas y reputación.</p></div>
+    </div></section>
+
+  <section class="sec"><div class="band"><div><h2>El banco de horas: 1 hora enseñada, 1 hora aprendida</h2><p>Nadie paga ni cobra. Cada sesión se mide en horas y ambas personas ganan lo mismo. Así el intercambio siempre es justo.</p></div>
+    <div class="clock"><div class="pill"><b>1 h</b><small>enseñas</small></div><svg viewBox="0 0 24 24" fill="none" stroke="#2b2540" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h14l-3-3M20 16H6l3 3"/></svg><div class="pill"><b>1 h</b><small>aprendes</small></div></div></div></section>
+
+  <section class="sec"><div class="sec-h"><h2>Personas mejor calificadas</h2><button class="btn ghost sm" data-go="explorar">Ver todas</button></div>
+    <div class="grid">${top.map(pcard).join('')}</div></section>
+
+  <section class="sec"><div class="sec-h"><h2>Lo que dicen quienes ya intercambiaron</h2><p>Reseñas de ejemplo para el prototipo.</p></div>
+    <div class="testi">${[S.users[0],S.users[3],S.users[6]].map(u=>{const r=u.rev[0];return `<div class="quote"><span class="stars">${stars(r[2])}</span><p>“${esc(r[1])}”</p><div class="who">${avatar(u.av)}<div><b>${esc(r[0])}</b><small>sobre ${esc(u.name)}</small></div></div></div>`}).join('')}</div></section>`;
+}
+let F={cat:'todas',q:'',mod:'todas',sort:'match'};
+function vExplorar(){return `
+  <div class="page-h"><h1>Explorar personas</h1><p>Filtra por habilidad. Si ya publicaste tu perfil, los matches aparecen primero.</p></div>
+  <div class="layout"><aside class="filters" aria-label="Filtros">
+    <label>Buscar<input id="fq" type="search" placeholder="Habilidad, nombre o ciudad" value="${esc(F.q)}"></label>
+    <div class="fld">Habilidad que quiero aprender<div class="fchips" id="fcats"></div></div>
+    <label>Modalidad<select id="fmod"><option value="todas">Cualquiera</option><option value="Virtual">Virtual</option><option value="Presencial">Presencial</option></select></label>
+    <label>Ordenar por<select id="fsort"><option value="match">Mejor match</option><option value="rating">Mejor calificadas</option><option value="done">Más intercambios</option></select></label>
+  </aside><div><div class="grid" id="results"></div></div></div>`}
+function paintExplorar(){
+  $('fcats').innerHTML=[{id:'todas',n:'Todas'},...CATS].map(c=>`<button class="fchip" data-fcat="${c.id}" aria-pressed="${F.cat===c.id}">${c.n}</button>`).join('');
+  $('fmod').value=F.mod;$('fsort').value=F.sort;
+  const t=F.q.trim().toLowerCase();
+  let l=S.users.filter(u=>(F.cat==='todas'||u.offer===F.cat)&&(F.mod==='todas'||u.mod.includes(F.mod))&&(!t||[u.name,u.role,u.city,u.offerD,u.wantD,cat(u.offer).n].join(' ').toLowerCase().includes(t)));
+  l.sort((a,b)=>F.sort==='rating'?b.rating-a.rating:F.sort==='done'?b.done-a.done:(score(b)-score(a))||(b.rating-a.rating));
+  $('results').innerHTML=l.length?l.map(pcard).join(''):'<div class="empty">Nadie coincide con esos filtros. Prueba otra categoría o publica la tuya.</div>';
+}
+function vPerfil(id){
+  const u=byId(id);if(!u)return '<div class="empty" style="margin-top:40px">Perfil no encontrado.</div>';
+  const sc=score(u),sent=S.reqs.some(r=>r.toId===u.id);
+  const c=cat(u.offer).c;
+  return `<button class="back" data-go="explorar">← Volver a explorar</button>
+  <div class="banner" style="--c:${c}"><svg viewBox="0 0 800 190" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><circle cx="90" cy="40" r="90" fill="#fff" fill-opacity=".35"/><circle cx="700" cy="150" r="130" fill="#fff" fill-opacity=".3"/><circle cx="420" cy="30" r="46" fill="#fff" fill-opacity=".3"/></svg></div>
+  <div class="ph">${avatar(u.av,'av')}<div style="padding-bottom:8px"><h1>${esc(u.name)}</h1><div class="muted">${esc(u.role)} · ${esc(u.city)}</div><div class="meta" style="margin-top:6px"><span class="stars">${stars(u.rating)}</span><span>${u.rating.toFixed(1)} · ${u.done} intercambios</span></div></div>
+    <div class="row" style="padding-bottom:8px"><button class="btn ghost" data-chat="${u.id}">Enviar mensaje</button><button class="btn" data-req="${u.id}" ${sent?'disabled':''}>${sent?'Solicitud enviada':'Proponer intercambio'}</button></div></div>
+  <div class="cols"><div style="display:flex;flex-direction:column;gap:22px">
+    ${sc?`<div class="note"><b>${sc===2?'Match perfecto:':'Posible match:'}</b> ${u.offer===S.me.want?`${esc(u.name)} enseña lo que quieres aprender. `:''}${u.want===S.me.offer?`Y quiere aprender lo que tú enseñas.`:''}</div>`:''}
+    <div class="box"><h3>Sobre ${esc(u.name.split(' ')[0])}</h3><p>${esc(u.bio)}</p></div>
+    <div class="box"><h3>Intercambio</h3><div class="two" style="margin:0;gap:14px">
+      <div class="skill" style="--c:${cat(u.offer).c}"><small>Enseña · ${cat(u.offer).n}</small><p>${esc(u.offerD)}</p></div>
+      <div class="skill" style="--c:${cat(u.want).c}"><small>Quiere aprender · ${cat(u.want).n}</small><p>${esc(u.wantD)}</p></div></div></div>
+    <div class="box"><h3>Reseñas</h3>${u.rev.map(r=>`<div class="rev"><span class="stars">${stars(r[2])}</span> <b>${esc(r[0])}</b><p class="muted">${esc(r[1])}</p></div>`).join('')}<small class="muted">Reseñas de ejemplo del prototipo.</small></div>
+  </div><aside class="box"><h3>Detalles</h3>
+    <div class="kv"><span class="muted">Modalidad</span><b>${esc(u.mod)}</b></div>
+    <div class="kv"><span class="muted">Disponibilidad</span><b>${esc(u.avail)}</b></div>
+    <div class="kv"><span class="muted">Ciudad</span><b>${esc(u.city)}</b></div>
+    <div class="kv"><span class="muted">Intercambios</span><b>${u.done}</b></div>
+    <p class="muted" style="font-size:.88rem">Se paga en horas: tú enseñas el mismo tiempo que aprendes.</p></aside></div>`;
+}
+function vMensajes(id){
+  const ids=Object.keys(S.chats);
+  if(id&&!S.chats[id]){S.chats[id]={msgs:[],unread:0};save()}
+  const list=Object.keys(S.chats);
+  if(!id&&list.length)id=list[0];
+  const body=id?(()=>{const u=byId(id),ch=S.chats[id];ch.unread=0;save();return `
+    <div class="thead">${avatar(u.av)}<div><b>${esc(u.name)}</b><div class="muted" style="font-size:.85rem">${esc(u.role)}</div></div><button class="btn ghost sm" style="margin-left:auto" data-go="perfil-${u.id}">Ver perfil</button></div>
+    <div class="msgs" id="msgs">${ch.msgs.length?ch.msgs.map(m=>`<div class="m ${m.f}">${esc(m.t)}</div>`).join(''):`<div class="note">Empieza la conversación con ${esc(u.name.split(' ')[0])}.</div>`}<div class="typing" id="typing" hidden>${esc(u.name.split(' ')[0])} está escribiendo…</div></div>
+    <form class="composer" data-form="msg" data-id="${id}"><input id="msgIn" placeholder="Escribe un mensaje" autocomplete="off" aria-label="Mensaje"><button class="btn sm" type="submit">Enviar</button></form>`})():`<div class="empty" style="margin:auto;background:none">Aún no tienes conversaciones. Abre un perfil y pulsa “Enviar mensaje”.</div>`;
+  return `<div class="page-h"><h1>Mensajes</h1><p>Coordina horarios y detalles antes de la sesión.</p></div>
+  <div class="chat"><div class="convs">${list.map(k=>{const u=byId(k),ch=S.chats[k],last=ch.msgs[ch.msgs.length-1];return `<button class="conv ${k===id?'on':''}" data-chat="${k}">${avatar(u.av)}<div><b>${esc(u.name)}${ch.unread?`<span class="dot">${ch.unread}</span>`:''}</b><small>${last?esc(last.t):'Sin mensajes'}</small></div></button>`}).join('')||'<div class="empty" style="background:none">Sin conversaciones.</div>'}</div>
+  <div class="thread">${body}</div></div>`;
+}
+const STEPS=['Solicitud','Aceptada','Agendada','Completada'];
+function vIntercambios(){
+  const l=S.reqs.slice().reverse();
+  return `<div class="page-h"><h1>Mis intercambios</h1><p>Sigue cada solicitud hasta completar la sesión.</p></div>
+  <div class="list">${l.length?l.map(r=>{const u=byId(r.toId),st=['pendiente','aceptada','agendada','completada'].indexOf(r.status);
+    return `<div class="xc">${avatar(u.av,'av')}<div style="min-width:0"><h3 style="font-size:1.1rem">${esc(u.name)}</h3>
+      <div class="muted" style="font-size:.9rem">Aprendes ${cat(u.offer).n.toLowerCase()}: ${esc(u.offerD)} · ${r.hours} h por ${r.hours} h</div>
+      ${r.when?`<div style="margin-top:6px"><b>Sesión:</b> ${esc(r.when)} · ${esc(r.mode)}</div>`:''}
+      <div class="tl">${STEPS.map((s,i)=>`<span class="${i<=st?'on':''}">${s}</span>`).join('')}</div></div>
+      <div class="acts">${r.status==='pendiente'?'<span class="muted" style="font-size:.85rem">Esperando respuesta…</span>':''}
+        ${r.status==='aceptada'?`<button class="btn sm" data-sched="${r.id}">Agendar sesión</button>`:''}
+        ${r.status==='agendada'?`<button class="btn sm" data-fin="${r.id}">Marcar completada</button>`:''}
+        ${r.status==='completada'?`<span class="tag" style="--c:var(--sage)">${'★'.repeat(r.stars||0)} Calificada</span>`:''}
+        <button class="btn ghost sm" data-chat="${u.id}">Mensaje</button></div></div>`}).join(''):`<div class="empty">Aún no tienes intercambios. Explora personas y propón el primero.</div>`}</div>`;
+}
+function vPanel(){
+  if(!S.me)return `<div class="page-h"><h1>Mi panel</h1><p>Crea tu perfil para ver tus matches, horas y reputación.</p></div>
+    <div class="box" style="margin-top:26px;max-width:640px"><h3>Aún no tienes perfil</h3><p class="muted">Publica qué enseñas y qué quieres aprender. Toma menos de un minuto.</p>
+    <div class="row"><button class="btn" data-go="publicar">Crear mi perfil</button><button class="btn ghost" data-demo="1">Usar perfil de ejemplo</button></div></div>`;
+  const matches=S.users.map(u=>({u,s:score(u)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s||b.u.rating-a.u.rating).slice(0,4);
+  const next=S.reqs.filter(r=>r.status==='agendada');
+  const goal=10,pct=Math.min(1,S.done.learned/goal),C=2*Math.PI*52;
+  const avg=S.me.ratings&&S.me.ratings.length?(S.me.ratings.reduce((a,b)=>a+b,0)/S.me.ratings.length).toFixed(1):'—';
+  return `<div class="page-h"><h1>Hola, ${esc(S.me.name.split(' ')[0])}</h1><p>Este es tu resumen de intercambios.</p></div>
+  <div class="kpis"><div class="kpi" style="--c:var(--lav)"><b>${S.done.taught} h</b><small>Horas enseñadas</small></div><div class="kpi" style="--c:var(--sky)"><b>${S.done.learned} h</b><small>Horas aprendidas</small></div>
+   <div class="kpi" style="--c:var(--sage)"><b>${S.done.count}</b><small>Intercambios completados</small></div><div class="kpi" style="--c:var(--butter)"><b>${avg}</b><small>Tu reputación</small></div></div>
+  <div class="two"><div class="box"><h3>Meta del mes</h3><div class="ring"><svg viewBox="0 0 130 130" role="img" aria-label="Progreso ${Math.round(pct*100)}%"><circle cx="65" cy="65" r="52" fill="none" stroke="var(--line)" stroke-width="14"/><circle cx="65" cy="65" r="52" fill="none" stroke="#8f77e0" stroke-width="14" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}" transform="rotate(-90 65 65)"/><text x="65" y="71" text-anchor="middle" font-family="Sora,sans-serif" font-weight="700" font-size="22" fill="var(--fg)">${Math.round(pct*100)}%</text></svg>
+    <div><b>${S.done.learned} de ${goal} horas</b><p class="muted">Aprende ${goal} horas este mes para desbloquear la insignia “Curioso constante”.</p></div></div></div>
+   <div class="box"><h3>Próximas sesiones</h3>${next.length?next.map(r=>{const u=byId(r.toId);return `<button class="mini" data-go="intercambios">${avatar(u.av)}<div><b>${esc(u.name)}</b><small>${esc(r.when)} · ${esc(r.mode)}</small></div></button>`}).join(''):'<p class="muted">No tienes sesiones agendadas.</p>'}</div></div>
+  <div class="box" style="margin-top:22px"><h3>Matches para ti</h3>${matches.length?matches.map(x=>`<button class="mini" data-go="perfil-${x.u.id}">${avatar(x.u.av)}<div><b>${esc(x.u.name)} · ${x.s===2?'Match perfecto':'Posible match'}</b><small>Enseña ${esc(x.u.offerD)}</small></div><span class="btn sm ghost">Ver</span></button>`).join(''):'<p class="muted">Aún no hay matches. Prueba cambiando lo que quieres aprender.</p>'}</div>`;
+}
+function vPublicar(){
+  const m=S.me||{};
+  const opts=sel=>CATS.map(c=>`<option value="${c.id}" ${sel===c.id?'selected':''}>${c.n}</option>`).join('');
+  return `<div class="page-h"><h1>${S.me?'Editar mi perfil':'Publica tu habilidad'}</h1><p>Mira a la derecha cómo te verán los demás.</p></div>
+  <div class="pub"><form class="box form" data-form="pub" novalidate id="pubForm">
+    <div class="fld full"><label for="f-name">Nombre completo</label><input id="f-name" maxlength="40" value="${esc(m.name||'')}" placeholder="Ej: Laura Gómez"><span class="err" id="e-name"></span></div>
+    <div class="fld"><label for="f-role">Profesión u oficio</label><input id="f-role" maxlength="40" value="${esc(m.role||'')}" placeholder="Ej: Docente"><span class="err" id="e-role"></span></div>
+    <div class="fld"><label for="f-city">Ciudad</label><input id="f-city" maxlength="30" value="${esc(m.city||'')}" placeholder="Ej: Bogotá"></div>
+    <div class="fld"><label for="f-offer">Puedo enseñar</label><select id="f-offer">${opts(m.offer||'idiomas')}</select></div>
+    <div class="fld"><label for="f-offerD">Detalle de lo que enseño</label><input id="f-offerD" maxlength="60" value="${esc(m.offerD||'')}" placeholder="Ej: Inglés conversacional"><span class="err" id="e-offerD"></span></div>
+    <div class="fld"><label for="f-want">Quiero aprender</label><select id="f-want">${opts(m.want||'diseno')}</select></div>
+    <div class="fld"><label for="f-wantD">Detalle de lo que busco</label><input id="f-wantD" maxlength="60" value="${esc(m.wantD||'')}" placeholder="Ej: Diseño de logos"><span class="err" id="e-wantD"></span></div>
+    <div class="fld"><label for="f-mod">Modalidad</label><select id="f-mod">${['Virtual','Presencial','Virtual o presencial'].map(x=>`<option ${m.mod===x?'selected':''}>${x}</option>`).join('')}</select></div>
+    <div class="fld"><label for="f-avail">Disponibilidad</label><input id="f-avail" maxlength="40" value="${esc(m.avail||'')}" placeholder="Ej: Sábados, mañana"></div>
+    <div class="fld full"><label for="f-bio">Sobre ti (opcional)</label><textarea id="f-bio" maxlength="200" rows="3" placeholder="Cuenta en una frase cómo enseñas">${esc(m.bio||'')}</textarea></div>
+    <div class="row full"><button class="btn" type="submit">${S.me?'Guardar cambios':'Publicar perfil'}</button><button class="btn ghost" type="button" data-reset="1">Restablecer datos de prueba</button></div>
+  </form><div class="sticky"><div class="muted" style="font-weight:700;margin-bottom:10px">Vista previa</div><div id="preview"></div></div></div>`;
+}
+function readForm(){
+  const g=id=>$(id).value.trim();
+  return {id:'me',mine:true,name:g('f-name')||'Tu nombre',role:g('f-role')||'Tu profesión',city:g('f-city')||'Colombia',offer:$('f-offer').value,offerD:g('f-offerD')||'Lo que enseñas',want:$('f-want').value,wantD:g('f-wantD')||'Lo que quieres aprender',mod:$('f-mod').value,avail:g('f-avail')||'A convenir',bio:g('f-bio')||'Me gusta compartir lo que sé y aprender de otros.',rating:5,done:0,av:(g('f-name').length*7)%8,rev:[]};
+}
+function paintPreview(){const u=readForm();$('preview').innerHTML=pcard(u).replace('data-go="perfil-me"','tabindex="-1" style="pointer-events:none"')}
+
+/* ---------- router ---------- */
+function route(){
+  const h=location.hash.slice(1)||'inicio';
+  const [v,...r]=h.split('-');const arg=r.join('-');
+  const app=$('app');
+  const map={inicio:vInicio,explorar:vExplorar,perfil:()=>vPerfil(arg),mensajes:()=>vMensajes(arg),intercambios:vIntercambios,panel:vPanel,publicar:vPublicar};
+  app.innerHTML=(map[v]||vInicio)();
+  if(v==='explorar')paintExplorar();
+  if(v==='publicar')paintPreview();
+  if(v==='mensajes'){const m=$('msgs');if(m)m.scrollTop=m.scrollHeight}
+  paintNav(v);
+  if(!route.keep)window.scrollTo(0,0);route.keep=false;
+}
+function paintNav(v){
+  const n=unread();
+  const L=[['inicio','Inicio'],['explorar','Explorar'],['mensajes','Mensajes'],['intercambios','Intercambios'],['panel','Mi panel']];
+  $('links').innerHTML=L.map(([k,t])=>`<button data-go="${k}" ${k===v||(k==='explorar'&&v==='perfil')?'aria-current="page"':''}>${t}${k==='mensajes'&&n?`<span class="dot">${n}</span>`:''}${k==='intercambios'&&S.reqs.length?`<span class="dot" style="background:var(--accent);color:var(--accent-fg)">${S.reqs.length}</span>`:''}</button>`).join('');
+}
+function go(h){if(location.hash.slice(1)===h)route();else location.hash=h}
+window.addEventListener('hashchange',route);
+
+/* ---------- lógica de chat y solicitudes ---------- */
+const REPLIES=['¡Hola! Me parece genial. ¿Qué días tienes libres esta semana?','Perfecto, podemos hacerlo por videollamada. ¿Te sirve en la tarde?','Claro que sí, te comparto algo de material antes de la primera sesión.','¡Qué bueno! Cuéntame cuál es tu nivel actual para preparar la clase.','Listo, quedamos así. ¡Estoy emocionado por empezar!'];
+function pushMsg(id,f,t){const ch=S.chats[id]||(S.chats[id]={msgs:[],unread:0});ch.msgs.push({f,t});save()}
+function botReply(id,delay=1500){
+  const ty=$('typing');if(ty&&location.hash.slice(1)==='mensajes-'+id)ty.hidden=false;
+  setTimeout(()=>{
+    const n=S.chats[id].msgs.filter(m=>m.f==='them').length;
+    pushMsg(id,'them',REPLIES[n%REPLIES.length]);
+    const here=location.hash.slice(1)==='mensajes-'+id;
+    if(!here){S.chats[id].unread=(S.chats[id].unread||0)+1;save();toast('Nuevo mensaje de '+byId(id).name.split(' ')[0])}
+    route.keep=true;if(['mensajes','intercambios','panel','explorar','inicio'].includes(location.hash.slice(1).split('-')[0])||here)route();
+  },delay);
+}
+function openReq(id){
+  const u=byId(id);if(!u)return;
+  const first=u.name.split(' ')[0];
+  modal(`<h3>Proponer a ${esc(first)}</h3><p class="muted">Tú aprendes ${esc(u.offerD.toLowerCase())}.</p>
+   <div class="fld"><label for="rq-h">Horas a intercambiar (tú enseñas lo mismo)</label><select id="rq-h">${[1,2,3,4,5].map(n=>`<option>${n}</option>`).join('')}</select></div>
+   <div class="fld"><label for="rq-m">Mensaje</label><textarea id="rq-m" rows="4" maxlength="240">Hola ${esc(first)}, ${S.me?`soy ${esc(S.me.name.split(' ')[0])}. Te puedo enseñar ${esc(S.me.offerD.toLowerCase())} y `:''}me gustaría aprender ${esc(u.offerD.toLowerCase())}. ¿Te animas?</textarea></div>
+   <div class="acts-r"><button class="btn ghost sm" data-close="1">Cancelar</button><button class="btn sm" data-sendreq="${id}">Enviar solicitud</button></div>`);
+}
+function sendReq(id){
+  const m=$('rq-m').value.trim();if(!m){toast('Escribe un mensaje primero');return}
+  const r={id:'r'+Date.now(),toId:id,msg:m,hours:+$('rq-h').value,status:'pendiente'};
+  S.reqs.push(r);pushMsg(id,'me',m);save();$('dlg').close();toast('Solicitud enviada a '+byId(id).name.split(' ')[0]);route.keep=true;route();
+  setTimeout(()=>{r.status='aceptada';save();pushMsg(id,'them','¡Acepto el intercambio! Agendemos la sesión.');S.chats[id].unread=(S.chats[id].unread||0)+1;save();toast(byId(id).name.split(' ')[0]+' aceptó tu solicitud');route.keep=true;route()},3500);
+}
+function openSched(id){
+  const r=S.reqs.find(x=>x.id===id),u=byId(r.toId);
+  const d=new Date(Date.now()+2*864e5).toISOString().slice(0,10);
+  modal(`<h3>Agendar con ${esc(u.name.split(' ')[0])}</h3><p class="muted">${r.hours} h de clase en cada dirección.</p>
+   <div class="fld"><label for="sc-d">Fecha</label><input id="sc-d" type="date" value="${d}"></div>
+   <div class="fld"><label for="sc-t">Hora</label><input id="sc-t" type="time" value="18:00"></div>
+   <div class="fld"><label for="sc-m">Modalidad</label><select id="sc-m"><option>Videollamada</option><option>Presencial</option></select></div>
+   <div class="acts-r"><button class="btn ghost sm" data-close="1">Cancelar</button><button class="btn sm" data-dosched="${id}">Confirmar</button></div>`);
+}
+function openFin(id){
+  modal(`<h3>¿Cómo te fue?</h3><p class="muted">Tu calificación ayuda a otras personas.</p>
+   <div class="rate" id="rate">${[1,2,3,4,5].map(n=>`<button data-star="${n}" aria-label="${n} estrellas">★</button>`).join('')}</div>
+   <div class="acts-r"><button class="btn ghost sm" data-close="1">Cancelar</button><button class="btn sm" data-dofin="${id}">Finalizar</button></div>`);
+  $('dlg').dataset.stars='5';paintStars(5);
+}
+function paintStars(n){$('dlg').dataset.stars=n;document.querySelectorAll('#rate button').forEach((b,i)=>b.classList.toggle('on',i<n))}
+
+/* ---------- eventos ---------- */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button,[data-go]');if(!t)return;const d=t.dataset;
+  if(d.go){go(d.go);return}
+  if(d.cat){F.cat=d.cat;go('explorar');return}
+  if(d.fcat){F.cat=d.fcat;paintExplorar();return}
+  if(d.chat){S.chats[d.chat]||(S.chats[d.chat]={msgs:[],unread:0});save();go('mensajes-'+d.chat);return}
+  if(d.req){if(!t.disabled)openReq(d.req);return}
+  if(d.sendreq){sendReq(d.sendreq);return}
+  if(d.close){$('dlg').close();return}
+  if(d.sched){openSched(d.sched);return}
+  if(d.dosched){const r=S.reqs.find(x=>x.id===d.dosched);const dt=$('sc-d').value,tm=$('sc-t').value;if(!dt||!tm){toast('Elige fecha y hora');return}
+    r.when=new Date(dt+'T'+tm).toLocaleString('es-CO',{weekday:'long',day:'numeric',month:'long',hour:'numeric',minute:'2-digit'});r.mode=$('sc-m').value;r.status='agendada';save();$('dlg').close();toast('Sesión agendada');route.keep=true;route();return}
+  if(d.fin){openFin(d.fin);return}
+  if(d.star){paintStars(+d.star);return}
+  if(d.dofin){const r=S.reqs.find(x=>x.id===d.dofin);r.status='completada';r.stars=+$('dlg').dataset.stars;S.done.taught+=r.hours;S.done.learned+=r.hours;S.done.count++;
+    const u=byId(r.toId);u.done++;if(S.me){(S.me.ratings=S.me.ratings||[]).push(r.stars)}save();$('dlg').close();toast('¡Intercambio completado! +'+r.hours+' h aprendidas');route.keep=true;route();return}
+  if(d.demo){S.me={id:'me',mine:true,name:'Laura Gómez',role:'Docente de primaria',city:'Bogotá',offer:'idiomas',offerD:'Inglés conversacional para adultos',want:'diseno',wantD:'Diseño de logos y presentaciones',mod:'Virtual',avail:'Sábados, mañana',bio:'Me gusta enseñar con conversación real y mucha paciencia.',ratings:[]};save();toast('Perfil de ejemplo cargado');route.keep=true;route();return}
+  if(d.reset){S=fresh();save();F={cat:'todas',q:'',mod:'todas',sort:'match'};toast('Datos de prueba restablecidos');go('inicio');return}
+});
+document.addEventListener('input',e=>{
+  if(e.target.id==='fq'){F.q=e.target.value;paintExplorar();const i=$('fq');i.focus();i.setSelectionRange(i.value.length,i.value.length)}
+  else if(e.target.closest('#pubForm'))paintPreview();
+});
+document.addEventListener('change',e=>{
+  if(e.target.id==='fmod'){F.mod=e.target.value;paintExplorar()}
+  else if(e.target.id==='fsort'){F.sort=e.target.value;paintExplorar()}
+  else if(e.target.closest('#pubForm'))paintPreview();
+});
+document.addEventListener('submit',e=>{
+  const f=e.target.closest('[data-form]');if(!f)return;e.preventDefault();
+  if(f.dataset.form==='msg'){const id=f.dataset.id,t=$('msgIn').value.trim();if(!t)return;pushMsg(id,'me',t);route.keep=true;route();botReply(id);const i=$('msgIn');if(i)i.focus()}
+  if(f.dataset.form==='pub'){
+    const need={name:'Escribe tu nombre',role:'Indica tu profesión',offerD:'Cuéntanos qué puedes enseñar',wantD:'Cuéntanos qué quieres aprender'};let ok=true;
+    for(const k in need){const v=$('f-'+k).value.trim();$('e-'+k).textContent=v?'':need[k];if(!v)ok=false}
+    if($('f-offer').value===$('f-want').value&&ok){$('e-wantD').textContent='Elige una categoría distinta a la que enseñas';ok=false}
+    if(!ok)return;
+    const u=readForm();S.me=Object.assign({ratings:[]},S.me||{},u);save();toast('¡Perfil publicado! Mira tus matches');go('panel');
+  }
+});
+$('dlg').addEventListener('click',e=>{if(e.target===$('dlg'))$('dlg').close()});
+
+load();route();
+</script>
+
+</body></html>
